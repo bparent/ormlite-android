@@ -2,8 +2,8 @@ package com.j256.ormlite.android;
 
 import java.sql.SQLException;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.db.DatabaseType;
@@ -27,6 +27,8 @@ public class AndroidConnectionSource extends BaseConnectionSource implements Con
 	private static final Logger logger = LoggerFactory.getLogger(AndroidConnectionSource.class);
 
 	private final SQLiteOpenHelper helper;
+	//FIXME: Is this how we want to store password?
+	private final String password;
 	private final SQLiteDatabase sqliteDatabase;
 	private DatabaseConnection connection = null;
 	private volatile boolean isOpen = true;
@@ -34,14 +36,16 @@ public class AndroidConnectionSource extends BaseConnectionSource implements Con
 	private static DatabaseConnectionProxyFactory connectionProxyFactory;
 	private boolean cancelQueriesEnabled = false;
 
-	public AndroidConnectionSource(SQLiteOpenHelper helper) {
+	public AndroidConnectionSource(SQLiteOpenHelper helper, String password) {
 		this.helper = helper;
 		this.sqliteDatabase = null;
+		this.password = password;
 	}
 
-	public AndroidConnectionSource(SQLiteDatabase sqliteDatabase) {
+	public AndroidConnectionSource(SQLiteDatabase sqliteDatabase, String password) {
 		this.helper = null;
 		this.sqliteDatabase = sqliteDatabase;
+		this.password = password;
 	}
 
 	public DatabaseConnection getReadOnlyConnection() throws SQLException {
@@ -63,7 +67,7 @@ public class AndroidConnectionSource extends BaseConnectionSource implements Con
 			SQLiteDatabase db;
 			if (sqliteDatabase == null) {
 				try {
-					db = helper.getWritableDatabase();
+					db = helper.getWritableDatabase(password);
 				} catch (android.database.SQLException e) {
 					throw SqlExceptionUtil.create("Getting a writable database from helper " + helper + " failed", e);
 				}

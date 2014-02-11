@@ -1,7 +1,7 @@
 package com.j256.ormlite.android.compat;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteDatabase;
 import android.os.CancellationSignal;
 
 /**
@@ -20,7 +20,9 @@ public class JellyBeanApiCompatibility extends BasicApiCompatibility {
 		if (cancellationHook == null) {
 			return db.rawQuery(sql, selectionArgs);
 		} else {
-			return db.rawQuery(sql, selectionArgs, ((JellyBeanCancellationHook) cancellationHook).cancellationSignal);
+			//FIXME: SQL cipher doesn't support this method....
+			return db.rawQuery(sql, selectionArgs);
+//			return db.rawQuery(sql, selectionArgs, ((JellyBeanCancellationHook) cancellationHook).cancellationSignal);
 		}
 	}
 

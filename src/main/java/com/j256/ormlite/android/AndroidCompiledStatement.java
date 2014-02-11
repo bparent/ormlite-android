@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
 
 import com.j256.ormlite.android.compat.ApiCompatibility;
 import com.j256.ormlite.android.compat.ApiCompatibility.CancellationHook;
@@ -174,9 +174,10 @@ public class AndroidCompiledStatement implements CompiledStatement {
 				} else {
 					finalSql = sql + " " + max;
 				}
-				if (cancelQueriesEnabled) {
-					cancellationHook = apiCompatibility.createCancellationHook();
-				}
+				//FIXME: unsupported by SQL cipher.. change once it is
+//				if (cancelQueriesEnabled) {
+//					cancellationHook = apiCompatibility.createCancellationHook();
+//				}
 				cursor = apiCompatibility.rawQuery(db, finalSql, getStringArray(), cancellationHook);
 				cursor.moveToFirst();
 				logger.trace("{}: started rawQuery cursor for: {}", this, finalSql);
